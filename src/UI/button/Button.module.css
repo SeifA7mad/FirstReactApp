@@ -1,0 +1,30 @@
+.btn {
+  padding: 1rem 2rem;
+  cursor: pointer;
+  color: white;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+}
+
+.confirm {
+  background-color: greenyellow;
+}
+
+.cancel {
+  background-color: rgb(141, 0, 0);
+}
+
+.open {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+
+  background: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff), #000;
+  background-position: center;
+  background-size: 50% 2px, 2px 50%; /*thickness = 2px, length = 50% (25px)*/
+  background-repeat: no-repeat;
+  border-radius: 50%;
+}

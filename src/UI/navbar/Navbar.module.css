@@ -1,0 +1,13 @@
+.nav {
+    background-color: whitesmoke;
+    width: 100%;
+    padding: 0.1rem;
+    position: fixed;
+    height: fit-content;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}

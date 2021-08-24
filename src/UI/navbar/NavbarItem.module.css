@@ -1,0 +1,12 @@
+.navbarItem {
+    margin: auto;
+    cursor: pointer;
+    padding: 1%;
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-radius: 2rem;
+}
+
+.navbarItem:hover {
+    background-color: antiquewhite;
+}

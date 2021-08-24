@@ -1,0 +1,14 @@
+.addMovies {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem auto;
+}
+
+.addMovies * {
+  margin: 1rem 0;
+  font-size: 1.5rem;
+}
+
+.addMovies input {
+  padding: 0.5rem 0;
+}

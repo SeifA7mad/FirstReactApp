@@ -1,0 +1,35 @@
+.moviesItem {
+  margin: auto;
+  padding: 6rem 0;
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.moviesItem p {
+  text-align: justify;
+  line-height: 3rem;
+  color: wheat;
+}
+
+.moviesItem h3 {
+  font-size: 3rem;
+  color: white;
+}
+
+.moviesItem .arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 5px;
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: transform 1s;
+}
+
+.moviesItem .arrowDown {
+  transform: rotate(45deg);
+}
+
+.moviesItem .arrowUp {
+  transform: rotate(-135deg);
+}
