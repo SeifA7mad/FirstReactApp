@@ -10,19 +10,25 @@ import Button from './UI/button/Button';
 function App() {
   const [movies, setMovies] = useState([]);
   const [addFormIsShowen, setAddFormIsShowen] = useState(false);
+  const moviesRef = useRef(new Map());
+  const [mRefs, setMRefs] = useState(new Map());
 
   const { isLoading, error, fetchData } = useHttp();
+
+  const addMovieRef = (id, ref) => {
+    moviesRef.current.set(id, ref);
+
+    setMRefs(moviesRef);
+  };
 
   useEffect(() => {
     const transferData = (dataObj) => {
       let newMovies = [];
-      let i = 0;
       for (let dataKey in dataObj) {
         newMovies.push({
           id: dataKey,
           title: dataObj[dataKey].title,
-          text: dataObj[dataKey].text,
-          ref: null,
+          text: dataObj[dataKey].text
         });
       }
       setMovies(newMovies);
@@ -53,13 +59,21 @@ function App() {
   return (
     <>
       <header>
-        <Navbar items={movies} />
+        {mRefs.size !== 0 && <Navbar items={movies} moviesRef={mRefs}/>}
       </header>
-      <Movies items={movies} loading={isLoading} err={error} />
+      <Movies
+        items={movies}
+        loading={isLoading}
+        err={error}
+        onAddMoviesRef={addMovieRef}
+      />
       <Button type='open' onClick={showAddFormHandler} />
       {addFormIsShowen && (
         <Modal onClose={hideAddFormHandler}>
-          <AddMovies onAddMovie={addMovieHandler} onHideModal={hideAddFormHandler} />
+          <AddMovies
+            onAddMovie={addMovieHandler}
+            onHideModal={hideAddFormHandler}
+          />
         </Modal>
       )}
     </>

@@ -9,14 +9,15 @@ const MoviesItem = (props) => {
     setIsShowen((prevIsShown) => !prevIsShown);
   };
   return (
-    <section ref={props.refComp} className={classes.moviesItem}>
+    <section ref={(ref) => props.onAddMoviesRef(props.id, ref)} className={classes.moviesItem}>
       <h3>
         {props.title}
         <i
-          className={`${classes.arrow} ${isShowen ? classes.arrowUp : classes.arrowDown}`}
+          className={`${classes.arrow} ${
+            isShowen ? classes.arrowUp : classes.arrowDown
+          }`}
           onClick={collapseSectionHandler}
-        >
-        </i>
+        ></i>
       </h3>
       {isShowen && <p> {props.text} </p>}
     </section>

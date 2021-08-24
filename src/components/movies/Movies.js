@@ -9,7 +9,15 @@ const Movies = (props) => {
 
     if (props.items.length > 0) {
         moviesList = props.items.map((item) => {
-            return <MoviesItem key={item.id} title={item.title} text={item.text} refComp={item.ref}/>
+            return (
+              <MoviesItem
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                text={item.text}
+                onAddMoviesRef={props.onAddMoviesRef}
+              />
+            );
         });
     }
 

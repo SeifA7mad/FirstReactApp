@@ -8,7 +8,13 @@ const Navbar = (props) => {
     content = (
       <ul>
         {props.items.map((item) => {
-          return <NavbarItem key={item.id} title={item.title} refComp={item.ref} />;
+          return (
+            <NavbarItem
+              key={item.id}
+              title={item.title}
+              refComp={props.moviesRef.current.get(item.id)}
+            />
+          );
         })}
       </ul>
     );
