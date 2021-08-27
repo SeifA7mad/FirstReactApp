@@ -28,10 +28,9 @@ const moviesStateReducer = (state, action) => {
 
   if (action.type === 'ADD-MOVIES-REFS') {
     const newMovies = new Map(state.movies);
-    const newMovie = newMovies.get(action.id);
-    newMovie.ref = action.ref;
-    newMovies.set(action.id, newMovie);
-
+    newMovies.forEach((item, id) => {
+      console.log(id);
+    });
     return {
       movies: newMovies,
     };
@@ -54,10 +53,16 @@ const MoviesProvider = (props) => {
     dispatch({ type: 'ADD-MOVIE', movie: movieData });
   };
 
+  const refs = new Map();
 
-  const addMovieRef = useCallback((id, ref) => {
-    dispatch({ type: 'ADD-MOVIES-REFS', id: id, ref: ref });
-  });
+  const addMovieRef = (id, ref) => {
+    refs.set(id, ref);
+    // dispatch({ type: 'ADD-MOVIES-REFS', id: id, ref: ref });
+  };
+
+  useEffect(() => {
+    dispatch({ type: 'ADD-MOVIES-REFS', refs: refs});
+  }, [refs.size]);
 
   useEffect(() => {
     // function to tranfer the requested movie data from server
