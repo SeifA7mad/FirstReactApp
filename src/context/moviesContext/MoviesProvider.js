@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import useHttp from '../../hooks/use-http';
 
@@ -62,14 +62,15 @@ const MoviesProvider = (props) => {
     // dispatch({ type: 'ADD-MOVIE', movie: movieData });
   };
 
-  const addMovieRef = useCallback((id, ref) => {
-    const newMovies = new Map(movies);
-    const movie = movies.get(id);
-    movie.ref = ref;
-    newMovies.set(id, movie);
-    setMovies(newMovies);
+  const addMovieRef = (id, ref) => {
+    if (movies.get(id).ref == null) {
+      const newMovies = new Map(movies);
+      newMovies.get(id).ref = ref;
+      setMovies(newMovies);
+    }
     // dispatch({ type: 'ADD-MOVIES-REFS', id: id, ref: ref });
-  });
+  };
+
 
   useEffect(() => {
     // function to tranfer the requested movie data from server

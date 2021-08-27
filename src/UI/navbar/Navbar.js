@@ -17,6 +17,7 @@ const Navbar = () => {
             <NavbarItem
               key={id}
               title={item.title}
+              refComp={item.ref}
             />
           );
         })}
