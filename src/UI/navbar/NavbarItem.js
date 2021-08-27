@@ -6,7 +6,7 @@ const NavbarItem = (props) => {
         refComp.scrollIntoView({ behavior: 'smooth' });
     };
 
-    return <li className={classes.navbarItem} onClick={() => navigateTo(props.refComp)}> {props.title} </li>
+    return <li className={classes.navbarItem} > {props.title} </li>
 };
 
 export default NavbarItem;

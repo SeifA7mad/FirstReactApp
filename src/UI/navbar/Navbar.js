@@ -9,15 +9,14 @@ const Navbar = () => {
   const moviesCtx = useContext(MoviesContext);
 
   let content = null;
-  if (moviesCtx.movies.length > 0) {
+  if (moviesCtx.movies.size > 0) {
     content = (
       <ul>
-        {moviesCtx.movies.map((item) => {
+        {Array.from(moviesCtx.movies).map(([id,item]) => {
           return (
             <NavbarItem
-              key={item.id}
+              key={id}
               title={item.title}
-              refComp={moviesCtx.moviesRef.current.get(item.id)}
             />
           );
         })}

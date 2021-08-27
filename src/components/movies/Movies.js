@@ -12,12 +12,12 @@ const Movies = () => {
 
   let moviesList = <h2> No Movies tonight... </h2>;
 
-  if (moviesCtx.movies.length > 0) {
-    moviesList = moviesCtx.movies.map((item) => {
+  if (moviesCtx.movies.size > 0) {
+    moviesList = Array.from(moviesCtx.movies).map(([id, item]) => {
       return (
         <MoviesItem
-          key={item.id}
-          id={item.id}
+          key={id}
+          id={id}
           title={item.title}
           text={item.text}
           onAddMoviesRef={moviesCtx.addMovieRef}

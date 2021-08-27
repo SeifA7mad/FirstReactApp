@@ -1,10 +1,9 @@
-import React, { useReducer, useRef, useEffect } from 'react';
+import React, { useReducer, useEffect, useCallback } from 'react';
 
 import useHttp from '../../hooks/use-http';
 
 export const MoviesContext = React.createContext({
-  movies: [],
-  moviesRef: null,
+  movies: null,
   addMovie: null,
   addMovieRef: null,
   isLoading: false,
@@ -12,28 +11,29 @@ export const MoviesContext = React.createContext({
 });
 
 const initialMoviesState = {
-  movies: [],
-  moviesRefs: new Map(),
+  movies: new Map()
 };
 
 const moviesStateReducer = (state, action) => {
   if (action.type === 'ADD-MOVIES') {
     return {
       movies: action.movies,
-      moviesRefs: state.moviesRefs,
     };
   }
   if (action.type === 'ADD-MOVIE') {
     return {
       movies: state.movies.concat(action.movie),
-      moviesRefs: state.moviesRefs,
     };
   }
 
   if (action.type === 'ADD-MOVIES-REFS') {
+    const newMovies = new Map(state.movies);
+    const newMovie = newMovies.get(action.id);
+    newMovie.ref = action.ref;
+    newMovies.set(action.id, newMovie);
+
     return {
-      movies: state.movies,
-      moviesRefs: action.movieRef,
+      movies: newMovies,
     };
   }
   return initialMoviesState;
@@ -47,9 +47,6 @@ const MoviesProvider = (props) => {
     initialMoviesState
   );
 
-  // movies refs
-  const moviesRef = useRef(new Map());
-
   // movies http request
   const { isLoading, error, fetchData } = useHttp();
 
@@ -57,23 +54,20 @@ const MoviesProvider = (props) => {
     dispatch({ type: 'ADD-MOVIE', movie: movieData });
   };
 
-  const addMovieRef = (id, ref) => {
-    moviesRef.current.set(id, ref);
-  };
 
-  useEffect(() => {
-    dispatch({ type: 'ADD-MOVIES-REFS', movieRef: moviesRef });
-  }, [moviesRef]);
+  const addMovieRef = useCallback((id, ref) => {
+    dispatch({ type: 'ADD-MOVIES-REFS', id: id, ref: ref });
+  });
 
   useEffect(() => {
     // function to tranfer the requested movie data from server
     const transferData = (dataObj) => {
-      let newMovies = [];
+      let newMovies = new Map();
       for (let dataKey in dataObj) {
-        newMovies.push({
-          id: dataKey,
+        newMovies.set(dataKey, {
           title: dataObj[dataKey].title,
           text: dataObj[dataKey].text,
+          ref: null
         });
       }
       dispatch({ type: 'ADD-MOVIES', movies: newMovies });
@@ -91,7 +85,6 @@ const MoviesProvider = (props) => {
     <MoviesContext.Provider
       value={{
         movies: moviesState.movies,
-        moviesRef: moviesState.moviesRefs,
         addMovie: addMovie,
         addMovieRef: addMovieRef,
         isLoading: isLoading,

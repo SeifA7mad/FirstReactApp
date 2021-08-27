@@ -1,6 +1,4 @@
-import { useState, useContext } from 'react';
-
-import { MoviesContext } from './context/moviesContext/MoviesProvider';
+import { useState } from 'react';
 
 import Navbar from './UI/navbar/Navbar';
 import Movies from './components/movies/Movies';
@@ -9,9 +7,6 @@ import AddMovies from './components/movies/addMoviesForm/AddMovies';
 import Button from './UI/button/Button';
 
 function App() {
-
-  const moviesCtx = useContext(MoviesContext);
-
   const [addFormIsShowen, setAddFormIsShowen] = useState(false);
 
   const showAddFormHandler = () => {
@@ -25,7 +20,7 @@ function App() {
   return (
     <>
       <header>
-        {moviesCtx.moviesRef.size !== 0 && <Navbar />}
+        <Navbar />
       </header>
       <Movies />
       <Button type='open' onClick={showAddFormHandler} />
