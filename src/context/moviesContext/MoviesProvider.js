@@ -2,16 +2,14 @@ import React, { useReducer, useRef, useEffect } from 'react';
 
 import useHttp from '../../hooks/use-http';
 
-export const MoviesContext = React.createContext(
-    {
-        movies: [],
-        moviesRef: null,
-        addMovie: null,
-        addMovieRef: null,
-        isLoading: false,
-        hasError: null
-    }
-);
+export const MoviesContext = React.createContext({
+  movies: [],
+  moviesRef: null,
+  addMovie: null,
+  addMovieRef: null,
+  isLoading: false,
+  hasError: null,
+});
 
 const initialMoviesState = {
   movies: [],
@@ -22,25 +20,26 @@ const moviesStateReducer = (state, action) => {
   if (action.type === 'ADD-MOVIES') {
     return {
       movies: action.movies,
-      moviesRefs: state.moviesRef,
+      moviesRefs: state.moviesRefs,
     };
   }
   if (action.type === 'ADD-MOVIE') {
     return {
       movies: state.movies.concat(action.movie),
-      moviesRefs: state.moviesRef,
+      moviesRefs: state.moviesRefs,
     };
   }
 
   if (action.type === 'ADD-MOVIES-REFS') {
-      return {
-        movies: state.movies,
-        moviesRefs: action.moviesRef
-      };
+    return {
+      movies: state.movies,
+      moviesRefs: action.movieRef,
+    };
   }
   return initialMoviesState;
 };
 
+// component provider funtion
 const MoviesProvider = (props) => {
   // movies state
   const [moviesState, dispatch] = useReducer(
@@ -60,8 +59,11 @@ const MoviesProvider = (props) => {
 
   const addMovieRef = (id, ref) => {
     moviesRef.current.set(id, ref);
-    dispatch({ type: 'ADD-MOVIES-REFS', moviesRef: moviesRef });
   };
+
+  useEffect(() => {
+    dispatch({ type: 'ADD-MOVIES-REFS', movieRef: moviesRef });
+  }, [moviesRef]);
 
   useEffect(() => {
     // function to tranfer the requested movie data from server
@@ -93,7 +95,7 @@ const MoviesProvider = (props) => {
         addMovie: addMovie,
         addMovieRef: addMovieRef,
         isLoading: isLoading,
-        hasError: error
+        hasError: error,
       }}
     >
       {props.children}

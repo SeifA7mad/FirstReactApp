@@ -5,7 +5,7 @@ import { MoviesContext } from '../../context/moviesContext/MoviesProvider';
 
 import classes from './Navbar.module.css';
 
-const Navbar = (props) => {
+const Navbar = () => {
   const moviesCtx = useContext(MoviesContext);
 
   let content = null;
@@ -17,7 +17,7 @@ const Navbar = (props) => {
             <NavbarItem
               key={item.id}
               title={item.title}
-              
+              refComp={moviesCtx.moviesRef.current.get(item.id)}
             />
           );
         })}
