@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import useHttp from '../../hooks/use-http';
 
@@ -10,59 +10,66 @@ export const MoviesContext = React.createContext({
   hasError: null,
 });
 
-const initialMoviesState = {
-  movies: new Map()
-};
+// const initialMoviesState = {
+//   movies: new Map()
+// };
 
-const moviesStateReducer = (state, action) => {
-  if (action.type === 'ADD-MOVIES') {
-    return {
-      movies: action.movies,
-    };
-  }
-  if (action.type === 'ADD-MOVIE') {
-    return {
-      movies: state.movies.concat(action.movie),
-    };
-  }
+// const moviesStateReducer = (state, action) => {
+//   if (action.type === 'ADD-MOVIES') {
+//     return {
+//       movies: action.movies,
+//     };
+//   }
+//   if (action.type === 'ADD-MOVIE') {
+//     return {
+//       movies: state.movies.concat(action.movie),
+//     };
+//   }
 
-  if (action.type === 'ADD-MOVIES-REFS') {
-    const newMovies = new Map(state.movies);
-    newMovies.forEach((item, id) => {
-      console.log(id);
-    });
-    return {
-      movies: newMovies,
-    };
-  }
-  return initialMoviesState;
-};
+//   if (action.type === 'ADD-MOVIES-REFS') {
+//     const newMovies = new Map(state.movies);
+//     newMovies.forEach((item, id) => {
+//       console.log(id);
+//     });
+//     return {
+//       movies: newMovies,
+//     };
+//   }
+//   return initialMoviesState;
+// };
 
 // component provider funtion
 const MoviesProvider = (props) => {
   // movies state
-  const [moviesState, dispatch] = useReducer(
-    moviesStateReducer,
-    initialMoviesState
-  );
+  // const [moviesState, dispatch] = useReducer(
+  //   moviesStateReducer,
+  //   initialMoviesState
+  // );
+
+  const [movies, setMovies] = useState(new Map());
 
   // movies http request
   const { isLoading, error, fetchData } = useHttp();
 
   const addMovie = (movieData) => {
-    dispatch({ type: 'ADD-MOVIE', movie: movieData });
+    const newMovies = new Map(movies);
+    newMovies.set(movieData.id, {
+      title: movieData.title,
+      text: movieData.text,
+      ref: null,
+    });
+    // setMovies(newMovies);
+    // dispatch({ type: 'ADD-MOVIE', movie: movieData });
   };
 
-  const refs = new Map();
-
-  const addMovieRef = (id, ref) => {
-    refs.set(id, ref);
+  const addMovieRef = useCallback((id, ref) => {
+    const newMovies = new Map(movies);
+    const movie = movies.get(id);
+    movie.ref = ref;
+    newMovies.set(id, movie);
+    setMovies(newMovies);
     // dispatch({ type: 'ADD-MOVIES-REFS', id: id, ref: ref });
-  };
-
-  useEffect(() => {
-    dispatch({ type: 'ADD-MOVIES-REFS', refs: refs});
-  }, [refs.size]);
+  });
 
   useEffect(() => {
     // function to tranfer the requested movie data from server
@@ -72,10 +79,10 @@ const MoviesProvider = (props) => {
         newMovies.set(dataKey, {
           title: dataObj[dataKey].title,
           text: dataObj[dataKey].text,
-          ref: null
+          ref: null,
         });
       }
-      dispatch({ type: 'ADD-MOVIES', movies: newMovies });
+      setMovies(newMovies);
     };
 
     fetchData(
@@ -89,7 +96,7 @@ const MoviesProvider = (props) => {
   return (
     <MoviesContext.Provider
       value={{
-        movies: moviesState.movies,
+        movies: movies,
         addMovie: addMovie,
         addMovieRef: addMovieRef,
         isLoading: isLoading,
