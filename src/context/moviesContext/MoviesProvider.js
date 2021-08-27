@@ -20,16 +20,15 @@ const initialMoviesState = {
 
 const moviesStateReducer = (state, action) => {
   if (action.type === 'ADD-MOVIES') {
-      const movies = [...action.movies]
     return {
-      movies: movies,
-      moviesRefs: state.moviesRefs,
+      movies: action.movies,
+      moviesRefs: state.moviesRef,
     };
   }
   if (action.type === 'ADD-MOVIE') {
     return {
       movies: state.movies.concat(action.movie),
-      moviesRefs: state.moviesRefs,
+      moviesRefs: state.moviesRef,
     };
   }
 
@@ -55,7 +54,6 @@ const MoviesProvider = (props) => {
   // movies http request
   const { isLoading, error, fetchData } = useHttp();
 
-
   const addMovie = (movieData) => {
     dispatch({ type: 'ADD-MOVIE', movie: movieData });
   };
@@ -76,7 +74,7 @@ const MoviesProvider = (props) => {
           text: dataObj[dataKey].text,
         });
       }
-       dispatch({ type: 'ADD-MOVIES', movies: newMovies });
+      dispatch({ type: 'ADD-MOVIES', movies: newMovies });
     };
 
     fetchData(
