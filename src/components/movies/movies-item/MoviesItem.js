@@ -8,6 +8,7 @@ const MoviesItem = (props) => {
   const collapseSectionHandler = () => {
     setIsShowen((prevIsShown) => !prevIsShown);
   };
+  
   return (
     <section ref={(ref) => props.onAddMoviesRef(props.id, ref)} className={classes.moviesItem}>
       <h3>

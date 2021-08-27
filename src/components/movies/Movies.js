@@ -1,41 +1,46 @@
+import { useContext } from 'react';
 
 import Button from '../../UI/button/Button';
 import MoviesItem from './movies-item/MoviesItem';
 
+import { MoviesContext } from '../../context/moviesContext/MoviesProvider';
+
 import classes from './Movies.module.css';
 
-const Movies = (props) => {
-    let moviesList = <h2> No Movies tonight... </h2>;
+const Movies = () => {
+  const moviesCtx = useContext(MoviesContext);
 
-    if (props.items.length > 0) {
-        moviesList = props.items.map((item) => {
-            return (
-              <MoviesItem
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                text={item.text}
-                onAddMoviesRef={props.onAddMoviesRef}
-              />
-            );
-        });
-    }
+  let moviesList = <h2> No Movies tonight... </h2>;
 
-    let content = moviesList;
+  if (moviesCtx.movies.length > 0) {
+    moviesList = moviesCtx.movies.map((item) => {
+      return (
+        <MoviesItem
+          key={item.id}
+          id={item.id}
+          title={item.title}
+          text={item.text}
+          onAddMoviesRef={moviesCtx.addMovieRef}
+        />
+      );
+    });
+  }
 
-    if (props.loading) {
-        content = <h2> Please wait.... </h2>;
-    }
+  let content = moviesList;
 
-    if (props.err) {
-        content = <Button type='cancel' onClick={props.onFetch}> Try again </Button>;
-    }
+  if (moviesCtx.isLoading) {
+    content = <h2> Please wait.... </h2>;
+  }
 
-    return (
-        <div className={classes.movies}>
-            {content}
-        </div>
+  if (moviesCtx.hasError) {
+    content = (
+      <Button type='cancel'>
+        Try again
+      </Button>
     );
+  }
+
+  return <div className={classes.movies}>{content}</div>;
 };
 
 export default Movies;

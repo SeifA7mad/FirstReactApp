@@ -1,9 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useContext } from 'react';
+
+import { MoviesContext } from '../../../context/moviesContext/MoviesProvider';
 import useHttp from '../../../hooks/use-http';
 import Button from '../../../UI/button/Button';
 import classes from './AddMovies.module.css';
 
 const AddMovies = (props) => {
+
+  const moviexCtx = useContext(MoviesContext);
+
   const inputTitleRef = useRef();
   const inputTextRef = useRef();
 
@@ -12,7 +17,7 @@ const AddMovies = (props) => {
   const transferData = (movieTitle, movieText, dataObj) => {
     const genertedId = dataObj.name;
     const newMovie = { id: genertedId, title: movieTitle, text: movieText };
-    props.onAddMovie(newMovie);
+    moviexCtx.addMovie(newMovie);
   };
 
   const addMovieHandler = (event) => {

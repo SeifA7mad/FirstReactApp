@@ -1,18 +1,23 @@
+import { useContext } from 'react';
+
 import NavbarItem from './NavbarItem';
+import { MoviesContext } from '../../context/moviesContext/MoviesProvider';
 
 import classes from './Navbar.module.css';
 
 const Navbar = (props) => {
+  const moviesCtx = useContext(MoviesContext);
+
   let content = null;
-  if (props.items.length > 0) {
+  if (moviesCtx.movies.length > 0) {
     content = (
       <ul>
-        {props.items.map((item) => {
+        {moviesCtx.movies.map((item) => {
           return (
             <NavbarItem
               key={item.id}
               title={item.title}
-              refComp={props.moviesRef.current.get(item.id)}
+              
             />
           );
         })}

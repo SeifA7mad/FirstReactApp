@@ -4,6 +4,7 @@
     padding: 0.1rem;
     position: fixed;
     height: fit-content;
+    z-index: 10;
 }
 
 .nav ul {
