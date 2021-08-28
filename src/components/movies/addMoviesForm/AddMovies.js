@@ -1,18 +1,44 @@
-import { useRef, useContext } from 'react';
+import { useContext } from 'react';
 
 import { MoviesContext } from '../../../context/moviesContext/MoviesProvider';
 import useHttp from '../../../hooks/use-http';
+import useInput from '../../../hooks/use-input';
 import Button from '../../../UI/button/Button';
 import classes from './AddMovies.module.css';
 
 const AddMovies = (props) => {
 
+  //movies data
   const moviexCtx = useContext(MoviesContext);
 
-  const inputTitleRef = useRef();
-  const inputTextRef = useRef();
+  //title input hook
+  const {
+    inputValue: titleInputValue,
+    inputValueIsValid: titleInputValueIsValid,
+    inputHasAnError: titleInputHasAnError,
+    onChangeInputValueHandler: onChangeTitleInputValueHandler,
+    onBlurInputHanlder: onBlurTitleInputHandler,
+    onResetInputHandler: onResetTitleInputHandler,
+  } = useInput((titleInputValue) => titleInputValue.trim() !== '');
 
-  const { isLoading, error, fetchData: sendData } = useHttp();
+  //text input hook
+  const {
+    inputValue: textInputValue,
+    inputValueIsValid: textInputValueIsValid,
+    inputHasAnError: textInputHasAnError,
+    onChangeInputValueHandler: onChangeTextInputValueHandler,
+    onBlurInputHanlder: onBlurTextInputHandler,
+    onResetInputHandler: onResetTextInputHandler,
+  } = useInput((textInputValue) => textInputValue.trim() !== '');
+
+  // fetch hook
+  const { isLoading, fetchData: sendData } = useHttp();
+
+  //from validaty
+  const formIsValid = false;
+  if (textInputValueIsValid && titleInputValueIsValid) {
+    formIsValid = true;
+  }
 
   const transferData = (movieTitle, movieText, dataObj) => {
     const genertedId = dataObj.name;
@@ -20,11 +46,12 @@ const AddMovies = (props) => {
     moviexCtx.addMovie(newMovie);
   };
 
-  const addMovieHandler = (event) => {
+  const onSubmitMovieHandler = (event) => {
     event.preventDefault();
 
-    const title = inputTitleRef.current.value;
-    const text = inputTextRef.current.value;
+    if (!formIsValid) {
+      return;
+    }
 
     sendData(
       {
@@ -33,19 +60,40 @@ const AddMovies = (props) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: { title: title, text: text },
+        body: { title: titleInputValue, text: textInputValue },
       },
-      transferData.bind(null, title, text)
+      transferData.bind(null, titleInputValue, textInputValue)
     );
 
+    onResetTitleInputHandler();
+    onResetTextInputHandler();
   };
 
   return (
-    <form className={classes.addMovies} onSubmit={addMovieHandler}>
+    <form className={classes.addMovies} onSubmit={onSubmitMovieHandler}>
       <label> Add Movie </label>
-      <input ref={inputTitleRef} placeholder='Title' />
-      <input ref={inputTextRef} placeholder='Text' />
-      <Button type='confirm'> Add Movie </Button>
+      <input
+        placeholder='Title'
+        onChange={onChangeTitleInputValueHandler}
+        onBlur={onBlurTitleInputHandler}
+        value={titleInputValue}
+      />
+      {titleInputHasAnError && (
+        <p> title must not be empty </p>
+      )}
+      <input
+        placeholder='Text'
+        onChange={onChangeTextInputValueHandler}
+        onBlur={onBlurTextInputHandler}
+        value={textInputValue}
+      />
+      {textInputHasAnError && (
+        <p> text must not be empty </p>
+      )}
+      <Button type='confirm' disabled={!formIsValid}>
+        {' '}
+        {isLoading ? 'Loading...' : 'Add Movie'}{' '}
+      </Button>
       <Button type='cancel' onClick={props.onHideModal}>
         cancel
       </Button>

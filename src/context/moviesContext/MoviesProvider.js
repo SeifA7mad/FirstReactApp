@@ -58,7 +58,7 @@ const MoviesProvider = (props) => {
       text: movieData.text,
       ref: null,
     });
-    // setMovies(newMovies);
+    setMovies(newMovies);
     // dispatch({ type: 'ADD-MOVIE', movie: movieData });
   };
 
