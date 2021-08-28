@@ -35,7 +35,7 @@ const AddMovies = (props) => {
   const { isLoading, fetchData: sendData } = useHttp();
 
   //from validaty
-  const formIsValid = false;
+  let formIsValid = false;
   if (textInputValueIsValid && titleInputValueIsValid) {
     formIsValid = true;
   }
